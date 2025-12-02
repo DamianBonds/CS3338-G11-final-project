@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Software Design Document}
+\lhead{Group {11}}
+\cfoot{\thepage}
+
+\begin{document}
+
+% Cover Page
+\begin{titlepage}
+\centering
+{\Huge \textbf{Software Design Document for Project Mirage (SDD)}\\[1.5cm]}
+{\Large Version 3.0 \\[0.5cm]}
+{\Large Team Name: Agustin, Matthew, Damian, Miguel, and Charles\\[0.5cm]}
+{\Large Group Number: {11}\\[0.5cm]}
+{\Large Date: \today}
+\end{titlepage}
+
+% Table of Contents
+\tableofcontents
+\newpage
+
+% ---------------- Version Description ----------------
+\section*{Version Description}
+\begin{tabularx}{\textwidth}{|c|X|c|}
+\hline
+\textbf{Version} & \textbf{Description} & \textbf{Date Added} \\ \hline
+1.0 & Initial release for Snapshot 1 & \today \\ \hline
+2.0 & Version 2 of SDD and include significant content & \today \\ \hline
+3.0 & Final and change of title & \today \\ \hline
+\end{tabularx}
+\newpage
+
+% Introduction
+\section{Introduction}
+\subsection{Purpose}
+The purpose of a Software Design Document is to serve as a blueprint that converts high-level requirements into a technical roadmap for a development team. It will detail the software's architecture, data design, and specific technical decisions, ensuring everyone on the team has a shared understanding that reduces confusion, speeds up development, and eases onboarding for new members.
+
+\subsection{Intended Audience}
+The primary audiences for an SDD document are technical and business stakeholders who need a shared understanding of the system's architecture and design before implementations begin. Some of these technical audiences consist of Software Architects, Developers or Programmers, QA Engineers or Testers, and Project Managers.
+
+\subsection{Overview}
+It's an AI called Anya that is operated within the Microsoft Teams environment using Microsoft Power Apps and Copilot Studio. It will allow users to submit and track IT and administrative tickets, retrieve files, retrieve contacts, translate documents, fill documents, and interact with internal systems via commands. All the data is facilitated through SharePoint and Smartsheet.
+
+% System Architecture
+\section{System Architecture}
+\subsection{Workflow of the System}
+The flow of the Project Mirage system consists of the following:
+
+\begin{itemize}
+    \item User Interface Subsystem: Manages all interaction between users and Microsoft Teams by presenting interactive components and capturing user responses.
+    \item Conversational Engine: Built with Copilot Studio, this component interprets user input written in natural language and routes requests to the appropriate system modules.
+    \item Session Management Subsystem: Monitors user sessions and maintains activity information, such as associating support tickets with the correct user.
+    \item Data Services Layer: Facilitates secure communication between Anya and external platforms, including SharePoint Lists and Smartsheet, through APIs to ensure reliable and protected data transfer.
+\end{itemize}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{system-structure.png}
+\end{figure}
+
+\subsection{Component Breakdown}
+The Project Mirage software is a standalone, desktop command-line application and does not use traditional client-server architecture or an external relational database. All processing is local to the machine where the software is executed. Some architectural Components include:
+\begin{itemize}
+    \item Anya is developed using Microsoft Power Platform tools, including PowerApps and Copilot Studio. These technologies were selected due to their strong compatibility with Microsoft 365 and their support for rapid application development with minimal coding. Anya is deployed within Microsoft Teams, allowing users to access it through a platform they already use daily.
+    \item Rather than developing new systems from the ground up, Anya builds on established tools such as PDHelpDesk and PDGo for ticket processing and administrative workflows. This method increases efficiency by avoiding duplication and ensuring smooth system integration.
+    \item Anya communicates with users through a chat-based interface. This design makes the system easy to learn, lowers training requirements, and improves user engagement. A form-based interaction model was evaluated but ultimately not used, as chat-based interaction was more flexible and intuitive.
+    \item The system is built using a modular architecture, where features such as ticket submission and file retrieval operate as independent components. This setup allows upgrades or modifications to be made without affecting the entire system. Additional features can be added smoothly as requirements change.
+    \item Anya is capable of identifying issues such as invalid input, missing permissions, or broken links. The system provides clear feedback and instructions when errors occur. Users can restart sessions if problems continue. Logs are maintained to assist with troubleshooting and system maintenance.
+    \item All system data is stored using SharePoint Lists and Smartsheet according to Santa Barbara County’s security guidelines. Information is protected through encryption both during transmission and while stored. Indexing and session tracking are implemented for fast data access and reliable records management.
+    \item A standard web-based support portal was reviewed but not selected due to poor integration with Microsoft Teams. Fully custom-built systems were also ruled out because they would require more development time and greater maintenance effort.
+\end{itemize}
+
+% User Interface
+\section{User Interface}
+\subsection{How to Use the System}
+Here is a rephrased version of that section with different wording and sentence structure while keeping the original meaning:
+\begin{enumerate}
+\item From the user’s perspective, Anya functions as an AI-powered virtual assistant embedded directly in Microsoft Teams that helps automate common workplace tasks. Users interact with Anya through simple, natural language messages such as “I need IT help” or “Submit a leave request.” When a request is made, Anya displays interactive prompts that guide users through actions like opening support tickets, submitting administrative requests, or searching for internal files. The system is designed to be intuitive and does not require technical training, while also supporting shortcut phrases for frequently used commands.
+
+\item Anya communicates conversationally and adapts based on the user’s input. If a message is unclear, the system prompts the user for clarification or suggests appropriate options. It also uses profile information to personalize responses and automatically routes tasks such as form processing or document access based on the user’s department or role. To ensure accessibility, Anya supports screen readers and high-contrast modes, meeting ADA compliance standards.
+
+\item Users receive clear visual confirmation of their actions through success messages, assigned ticket numbers, progress updates, and result summaries for file searches or contacts. Meanwhile, administrators and IT staff manage operations using PowerApps dashboards and SharePoint lists on the backend. This user-centered design allows staff to complete daily tasks efficiently without leaving the Teams platform.
+\end{enumerate}
+
+
+\subsection{Database Design}
+This section provides a high-level description of the main software components in Anya’s architecture and their roles within the system.
+
+\begin{itemize}
+    \item Collects user input and displays responses within Microsoft Teams. Works only for authenticated users and supports desktop and mobile layouts via Teams. Uses Adaptive Cards and input fields to send data to the conversational engine.
+    \item Interprets user messages using natural language processing. Routes commands to the correct module (tickets, admin requests, or file search). Uses Copilot Studio for intent recognition and error handling.
+    \item Creates and tracks IT tickets using PDHelpDesk. Stores ticket data in SharePoint. Sends confirmation and status updates to users.
+    \item Manages administrative tasks such as time-off requests and MCLE submissions. Works with Smartsheet and SharePoint through PDGo. Routes requests for approval and returns status updates.
+    \item Searches for files across SharePoint and Smartsheet using keywords. Filters results based on user access level. Returns matched documents or download links.
+    \item Tracks user activity and session details. Records timestamps and user actions in SharePoint logs. Supports system auditing and troubleshooting.
+    \item Handles secure communication with external systems. Ensures data validation and retry logic for failed requests. Integrates with Microsoft and Smartsheet APIs and LDAP.
+\end{itemize}
+Overall, the components are modular and loosely connected, it also improves system reliability, security, and maintainability. Finally, it supports future upgrades and feature expansion.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{design-ex.png}
+\end{figure}
+
+% Glossary
+\section{Glossary}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acronym} & \textbf{Definition} \\ \hline
+SDD & Software Design Document \\ \hline
+CLI & Command-line Interface \\ \hline
+API & Application Programming Interface \\ \hline
+LDAP & Lightweight Directory Access Protocol \\ \hline
+\end{tabularx}
+
+% References
+\section{References}
+"Project Mirage", https://ascent.cysun.org/project/project/view/220 
+
+\end{document}
